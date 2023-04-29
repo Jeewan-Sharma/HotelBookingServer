@@ -8,6 +8,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const createError = require("./src/utils/error");
 
 // DataBase Connecton MongoDB
 const db_connect = async () => {
@@ -41,9 +42,20 @@ app.use("/api/test", testRouter);
 const authRouter = require("./src/routes/auth.routes");
 app.use("/api/auth", authRouter);
 
-// route error handle
-app.use("*", (req, res) => {
-  res.status(404).json({ message: "Resources Not Found!!!" });
+// route NOT FOUND handle
+app.use((req, res, next) => {
+  throw next(createError(404, "Resources Not Found!"));
+});
+// route error handler
+app.use((err, req, res, next) => {
+  const errStatus = err.status || 500;
+  const errMessage = err.message || "something went wrong";
+  res.status(errStatus).json({
+    success: false,
+    status: errStatus,
+    message: errMessage,
+    stack: err.stack,
+  });
 });
 
 console.log("hello");
