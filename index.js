@@ -37,10 +37,12 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // routes
-const testRouter = require("./src/routes/test.routes");
-app.use("/api/test", testRouter);
-const authRouter = require("./src/routes/auth.routes");
-app.use("/api/auth", authRouter);
+const testRoutes = require("./src/routes/test.routes");
+app.use("/api/test", testRoutes);
+const authRoutes = require("./src/routes/auth.routes");
+app.use("/api/auth", authRoutes);
+const userRoutes = require("./src/routes/user.routes");
+app.use("/api/users", userRoutes);
 
 // route NOT FOUND handle
 app.use((req, res, next) => {
